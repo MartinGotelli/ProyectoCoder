@@ -10,7 +10,6 @@ def crear_curso(request, camada):
 
     return HttpResponse(f'Curso creado! {camada}')
 
-
 def inicio(request):
     return render(request, 'AppCoder/inicio.html')
 
