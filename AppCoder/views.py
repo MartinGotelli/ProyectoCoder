@@ -4,6 +4,8 @@ from django.http import HttpResponse
 
 from .models import Curso
 
+from django.template import loader
+
 def crear_curso(request, camada):
     curso = Curso(nombre='Python', camada=camada)
     curso.save()

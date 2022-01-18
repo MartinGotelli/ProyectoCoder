@@ -4,6 +4,6 @@ from AppCoder.views import crear_curso, cursos, inicio
 
 urlpatterns = [
     path('crearcurso/<camada>', crear_curso),
-    path('', inicio),
-    path('cursos', cursos),
+    path('', inicio, name='inicio'),
+    path('cursos', cursos, name='cursos'),
 ]
