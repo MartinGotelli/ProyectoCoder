@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
+
+from AppCoder.forms import CursoForm
 
 from .models import Curso
 
@@ -16,7 +18,8 @@ def inicio(request):
     return render(request, 'AppCoder/inicio.html')
 
 def cursos(request):
-    return render(request, 'AppCoder/cursos.html')
+    return render(request, 'AppCoder/cursos.html',
+    {'cursos': Curso.objects.all()})
 
 def profesores(request):
     return HttpResponse('profesores')
@@ -26,3 +29,29 @@ def estudiantes(request):
 
 def entregables(request):
     return HttpResponse('entregables')
+
+def cursos_formulario(request):
+    if request.method == 'POST':
+        formulario = CursoForm(request.POST)
+
+        if formulario.is_valid():
+            data = formulario.cleaned_data
+            Curso.objects.create(nombre=data['curso'], camada=data['camada'])
+            return redirect('cursos')
+    else:
+        formulario = CursoForm()
+    return render(request, 'AppCoder/cursosFormulario.html', {'formulario': formulario})
+
+def busqueda_camada(request):
+    return render(request, 'AppCoder/busquedaCamada.html')
+
+def buscar(request):
+    camada = request.GET.get("camada")
+    
+    if camada:
+        cursos = Curso.objects.filter(camada=camada)
+
+        return render(request, 'AppCoder/buscar.html',
+            {'cursos': cursos, 'camada': camada})
+    else:
+        return HttpResponse('No se envió una camada válida')
