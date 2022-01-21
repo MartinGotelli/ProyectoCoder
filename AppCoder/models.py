@@ -22,6 +22,9 @@ class Profesor(Model):
     email = EmailField()
     profesion = CharField(max_length=30)
 
+    def __str__(self):
+        return f'{self.nombre} {self.apellido} ({self.email}) - Profe de {self.profesion}'
+
 class Entregable(Model):
     nombre = CharField(max_length=30)
     fecha_entrega = DateField()
