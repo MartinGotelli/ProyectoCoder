@@ -11,12 +11,15 @@ from .models import Curso, Profesor
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from django.contrib.auth.decorators import login_required
+
 def crear_curso(request, camada):
     curso = Curso(nombre='Python', camada=camada)
     curso.save()
 
     return HttpResponse(f'Curso creado! {camada}')
 
+@login_required
 def inicio(request):
     return render(request, 'AppCoder/inicio.html')
 
