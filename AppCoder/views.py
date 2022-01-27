@@ -11,12 +11,17 @@ from .models import Curso, Profesor
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.contrib.auth.decorators import login_required
+
 def crear_curso(request, camada):
     curso = Curso(nombre='Python', camada=camada)
     curso.save()
 
     return HttpResponse(f'Curso creado! {camada}')
 
+@login_required
 def inicio(request):
     return render(request, 'AppCoder/inicio.html')
 
@@ -112,7 +117,7 @@ def profesor_update(request, id_profe):
     return render(request, 'AppCoder/cursosFormulario.html', {'formulario': formulario})
 
 
-class ProfesorListView(ListView):
+class ProfesorListView(LoginRequiredMixin, ListView):
     model = Profesor
     template_name = 'AppCoder/profesores.html'
     context_object_name = 'profesores'
