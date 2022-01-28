@@ -1,8 +1,10 @@
-from django.db.models import Model
+from django.db.models import Model, ForeignKey, CASCADE, ImageField
 from django.db.models.fields import (
     BooleanField, CharField, DateField, EmailField, IntegerField,
     GenericIPAddressField, URLField, DecimalField, TimeField
 )
+
+from django.contrib.auth.models import User
 
 class Curso(Model):
     nombre = CharField(max_length=40, verbose_name='Descripcion')
@@ -38,3 +40,7 @@ class Corredor(Model):
 class Hacker(Model):
     ip = GenericIPAddressField()
     sitio_preferido = URLField()
+
+class Avatar(Model):
+    user = ForeignKey(User, on_delete=CASCADE)
+    imagen = ImageField(upload_to='avatares', null=True, blank=True)

@@ -1,4 +1,4 @@
-from django.forms import Form, CharField, IntegerField, EmailField
+from django.forms import Form, CharField, ImageField, IntegerField, EmailField
 
 class CursoForm(Form):
     curso = CharField()
@@ -10,3 +10,6 @@ class ProfesorForm(Form):
     apellido = CharField(max_length=30)
     email = EmailField()
     profesion = CharField(max_length=30)
+
+class AvatarFormulario(Form):
+    imagen = ImageField(required=True)

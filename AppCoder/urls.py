@@ -1,6 +1,6 @@
 from django.urls import path
 
-from AppCoder.views import ProfesorCreateView, ProfesorDeleteView, ProfesorDetailView, ProfesorListView, ProfesorUpdateView, buscar, busqueda_camada, crear_curso, cursos, cursos_formulario, inicio, profesor_add, profesor_delete, profesor_update, profesores
+from AppCoder.views import ProfesorCreateView, ProfesorDeleteView, ProfesorDetailView, ProfesorListView, ProfesorUpdateView, agregar_avatar, buscar, busqueda_camada, crear_curso, cursos, cursos_formulario, estudiantes, inicio, profesor_add, profesor_delete, profesor_update, profesores
 
 from django.contrib.auth.decorators import login_required
 
@@ -20,4 +20,6 @@ urlpatterns = [
     path('profesores/update/<pk>', ProfesorUpdateView.as_view(), name='profesor_update'),
     path('profesores/delete/<pk>', ProfesorDeleteView.as_view(), name='profesor_delete'),
     path('profesores/view/<pk>', ProfesorDetailView.as_view(), name='profesor_view'),
+    path('estudiantes', estudiantes),
+    path('user/avatar/add', agregar_avatar, name='avatar_add')
 ]

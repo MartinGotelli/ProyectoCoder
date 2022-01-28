@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 
-from AppCoder.forms import CursoForm, ProfesorForm
+from AppCoder.forms import AvatarFormulario, CursoForm, ProfesorForm
 
-from .models import Curso, Profesor
+from .models import Avatar, Curso, Profesor
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -21,9 +21,15 @@ def crear_curso(request, camada):
 
     return HttpResponse(f'Curso creado! {camada}')
 
-@login_required
 def inicio(request):
-    return render(request, 'AppCoder/inicio.html')
+    avatares = Avatar.objects.filter(user=request.user)
+
+    if avatares:
+        avatar_url = avatares.last().imagen.url
+    else:
+        avatar_url = ''
+
+    return render(request, 'AppCoder/inicio.html', {'avatar_url': avatar_url})
 
 def cursos(request):
     return render(request, 'AppCoder/cursos.html',
@@ -117,7 +123,13 @@ def profesor_update(request, id_profe):
     return render(request, 'AppCoder/cursosFormulario.html', {'formulario': formulario})
 
 
-class ProfesorListView(LoginRequiredMixin, ListView):
+class AvatarView:
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        contexto['avatar_url'] = Avatar.objects.filter(user=self.request.user).last().imagen.url
+        return contexto
+
+class ProfesorListView(LoginRequiredMixin, AvatarView, ListView):
     model = Profesor
     template_name = 'AppCoder/profesores.html'
     context_object_name = 'profesores'
@@ -126,7 +138,7 @@ class ProfesorDetailView(DetailView):
     model = Profesor
     template_name = 'AppCoder/ver_profesor.html'
 
-class ProfesorCreateView(CreateView):
+class ProfesorCreateView(AvatarView, CreateView):
     model = Profesor
     success_url = reverse_lazy('profesores')
     fields = ['nombre', 'apellido', 'email', 'profesion']
@@ -142,3 +154,17 @@ class ProfesorDeleteView(DeleteView):
     model = Profesor
     success_url = reverse_lazy('profesores')
     # template_name toma por default 'AppCoder/profesor_confirm_delete.html'
+
+@login_required
+def agregar_avatar(request):
+    if request.method == 'POST':
+        formulario = AvatarFormulario(request.POST, request.FILES)
+
+        if formulario.is_valid():
+            avatar = Avatar(user=request.user, imagen=formulario.cleaned_data['imagen'])
+            avatar.save()
+            return redirect('inicio')
+    else:
+        formulario = AvatarFormulario()
+
+    return render(request, 'AppCoder/crear_avatar.html', {'form': formulario})
