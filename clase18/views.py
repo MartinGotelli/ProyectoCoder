@@ -1,3 +1,4 @@
+from audioop import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponse
@@ -11,6 +12,8 @@ from django.views.generic import CreateView
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.views import LoginView
 
 def login_request(request):
     if request.method == 'POST':
@@ -72,3 +75,9 @@ def editar_perfil(request):
         formulario = UserEditForm({'email': usuario.email})
     
     return render(request, 'registro.html', {'form': formulario})
+
+
+class CoderLoginView(LoginView):
+    template_name = 'login.html'
+    next_page = reverse_lazy('inicio')
+

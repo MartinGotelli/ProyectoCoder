@@ -126,7 +126,8 @@ def profesor_update(request, id_profe):
 class AvatarView:
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
-        contexto['avatar_url'] = Avatar.objects.filter(user=self.request.user).last().imagen.url
+        if self.request.user.is_authenticated:
+            contexto['avatar_url'] = Avatar.objects.filter(user=self.request.user).last().imagen.url
         return contexto
 
 class ProfesorListView(LoginRequiredMixin, AvatarView, ListView):
